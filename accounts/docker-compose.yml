@@ -1,0 +1,40 @@
+services:
+  accounts:
+    image: "i7osny/accounts:base"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - bank
+
+  loans:
+    image: "i7osny/loans:base"
+    container_name: loans-ms
+    ports:
+      - "8090:8090"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - bank
+
+  cards:
+    image: "i7osny/cards:base"
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - bank
+
+networks:
+  bank:
+    driver: "bridge"
