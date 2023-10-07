@@ -14,22 +14,21 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  config:
-    import:
-      - "application_qa.yml"
-      - "application_prod.yml"
   profiles:
     active:
-      - "qa"
+      - "prod"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  application:
+    name: "accounts"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
 
-build:
-  version: "3.0"
-
-accounts:
-  message: "Welcome to EazyBank accounts related local APIs "
-  contactDetails:
-    name: "John Doe - Developer"
-    email: "john@eazybank.com"
-  onCallSupport:
-    - (555) 555-1234
-    - (555) 523-1345
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
