@@ -63,6 +63,23 @@ services:
       file: common-config.yml
       service: microservice-base-config
 
+  eurekaserver:
+    image: "i7osny/eurekaserver:base"
+    container_name: eurekaserver-ms
+    ports:
+      - "8070:8070"
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaserver"
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-configserver-config
+
   accounts:
     image: "i7osny/accounts:base"
     container_name: accounts-ms
@@ -76,7 +93,7 @@ services:
         condition: service_healthy
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
   loans:
     image: "i7osny/loans:base"
@@ -91,7 +108,7 @@ services:
         condition: service_healthy
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
   cards:
     image: "i7osny/cards:base"
@@ -106,7 +123,7 @@ services:
         condition: service_healthy
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
 networks:
   bank:
