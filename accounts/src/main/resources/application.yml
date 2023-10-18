@@ -31,6 +31,14 @@ management:
   endpoint:
     shutdown:
       enabled: true
+    health:
+      probes:
+        enabled: true
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
   info:
     env:
       enabled: true
@@ -53,3 +61,9 @@ info:
     name: "accounts"
     description: "Bank Accounts Application"
     version: "1.0.0"
+
+logging:
+  level:
+    com:
+      bank:
+        accounts: DEBUG
