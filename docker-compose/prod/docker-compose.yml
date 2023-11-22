@@ -1,4 +1,17 @@
 services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.5
+    container_name: keycloak
+    ports:
+      - "7080:8080"
+    environment:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+    command: "start-dev"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   read:
     image: grafana/loki:2.9.2
     command: "-config.file=/etc/loki/config.yaml -target=read"
@@ -297,8 +310,6 @@ services:
   accounts:
     image: "i7osny/accounts:base"
     container_name: accounts-ms
-    ports:
-      - "8080:8080"
     environment:
       SPRING_APPLICATION_NAME: "accounts"
       SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
@@ -319,8 +330,6 @@ services:
   loans:
     image: "i7osny/loans:base"
     container_name: loans-ms
-    ports:
-      - "8090:8090"
     environment:
       SPRING_APPLICATION_NAME: "loans"
       SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
@@ -341,8 +350,6 @@ services:
   cards:
     image: "i7osny/cards:base"
     container_name: cards-ms
-    ports:
-      - "9000:9000"
     environment:
       SPRING_APPLICATION_NAME: "cards"
       SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
@@ -372,6 +379,7 @@ services:
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_DATA_REDIS_TIMEOUT: 1s
       OTEL_SERVICE_NAME: "gatewayserver"
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
     depends_on:
       accounts:
         condition: service_healthy
