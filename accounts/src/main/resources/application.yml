@@ -18,14 +18,24 @@ spring:
   application:
     name: "accounts"
   rabbitmq:
-    host: "localhost"
+    host: localhost
     port: 5672
-    username: "guest"
-    password: "guest"
+    username: guest
+    password: guest
+    connection-timeout: 10s
   cloud:
     openfeign:
       circuitbreaker:
         enabled: true
+    function:
+      definition: updateCommunication
+    stream:
+      bindings:
+        updateCommunication-in-0:
+          destination: communication-sent
+          group: ${spring.application.name}
+        sendCommunication-out-0:
+          destination: send-communication
 
 management:
   endpoints:
